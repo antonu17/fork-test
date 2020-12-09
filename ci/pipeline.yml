@@ -16,6 +16,14 @@ resources:
       uri: https://((secrets.github_token))@github.com/((organization_fork))/((repository_name)).git
       branch: ((base_branch_upstream))
 
+  - name: repo-fork
+    type: git
+    icon: github
+    check_every: 1h
+    source:
+      uri: https://((secrets.github_token))@github.com/((organization_fork))/((repository_name)).git
+      branch: ((base_branch_fork))
+
 jobs:
 
   - name: sync-base-branch
@@ -26,3 +34,22 @@ jobs:
       - put: repo-fork-base
         params:
           repository: repo-upstream-base
+
+  - name: create-pull-request
+    serial: true
+    plan:
+      - get: repo-fork-base
+        trigger: true
+      - get: repo-fork
+      - task: create-pull-request
+        file: repo-fork/ci/tasks/create-pull-request.yml
+        input_mapping:
+          pull-request-input: repo-fork-base
+          source: repo-fork
+        params:
+          GITHUB_TOKEN: ((secrets.github_token))
+          BASE_OWNER: ((organization_fork))
+          BASE_BRANCH: ((base_branch_fork))
+          HEAD_OWNER: ((organization_fork))
+          HEAD_BRANCH: ((base_branch_upstream))
+          MESSAGE: 'Automatic update from upstream'
