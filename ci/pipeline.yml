@@ -1,0 +1,22 @@
+resources:
+- name: repo-upstream
+  type: git
+  icon: github
+  source:
+    uri: https://((secrets.github_token))@github.com/((upstream_organization))/((repository_name)).git
+    branch: ((main_branch))
+- name: repo-fork
+  type: git
+  icon: github
+  source:
+    uri: https://((secrets.github_token))@github.com/((fork_organization))/((repository_name)).git
+    branch: ((main_branch))
+jobs:
+- name: sync-main-branch
+  serial: true
+  plan:
+  - get: repo-upstream
+    trigger: true
+  - put: repo-fork
+    params:
+      repository: repo-upstream
