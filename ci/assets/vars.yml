@@ -1,4 +1,5 @@
-upstream_organization: antomatic
-fork_organization: antonu17
+organization_upstream: antomatic
+organization_fork: antonu17
 repository_name: fork-test
-main_branch: main
+base_branch_upstream: main
+base_branch_fork: ci
