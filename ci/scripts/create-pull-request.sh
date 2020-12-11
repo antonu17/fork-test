@@ -26,7 +26,7 @@ tar zxf /tmp/hub.tgz --strip-components=2 -C /usr/local/bin hub-linux-amd64-2.14
 PR=$(hub pull-request -b "$BASE" -h "$HEAD" -m "$MESSAGE")
 
 if [ -n "$PR" ]; then
-  echo "{\"url\": \"$PR\"}" > ../pull-request-output/url.json
+  echo "$PR" > ../pull-request-output/url.json
 fi
 
 cat ../pull-request-output/url.json
