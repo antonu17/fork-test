@@ -29,4 +29,4 @@ if [ -n "$PR" ]; then
   echo "$PR" > ../pull-request-output/url.txt
 fi
 
-cat ../pull-request-output/url.json
+cat ../pull-request-output/url.txt
