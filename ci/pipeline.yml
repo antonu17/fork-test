@@ -32,11 +32,11 @@ resources:
       uri: https://((secrets.github_token))@github.com/((organization_fork))/((repository_name)).git
       branch: ((base_branch_fork))
 
-- name: slack-notification
-  type: slack-notification
-  icon: slack
-  source:
-    url: ((secrets.slack_url))
+  - name: slack-notification
+    type: slack-notification
+    icon: slack
+    source:
+      url: ((secrets.slack_url))
 
 jobs:
 
