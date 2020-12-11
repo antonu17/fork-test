@@ -1,3 +1,11 @@
+resource_types:
+
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest
+
 resources:
 
   - name: repo-upstream-base
@@ -23,6 +31,12 @@ resources:
     source:
       uri: https://((secrets.github_token))@github.com/((organization_fork))/((repository_name)).git
       branch: ((base_branch_fork))
+
+- name: slack-notification
+  type: slack-notification
+  icon: slack
+  source:
+    url: ((secrets.slack_url))
 
 jobs:
 
@@ -53,3 +67,20 @@ jobs:
           HEAD_OWNER: ((organization_fork))
           HEAD_BRANCH: ((base_branch_upstream))
           MESSAGE: 'Automatic update from upstream'
+
+      - task: prepare-slack-notification
+        file: repo-fork/ci/tasks/prepare-slack-message.yml
+        input_mapping:
+          slack-message-input: pull-request-output
+          source: repo-fork
+        params:
+          MESSAGE: Service catalog upstream updated. Consider merging the PR.
+          BUTTONS:
+            - label: Pull Request
+              url: slack-message-input/url.txt
+
+      - put: slack-notification
+        params:
+          username: ((slack_username))
+          channel: ((slack_channel))
+          attachments_file: slack-message-output/attachments.json

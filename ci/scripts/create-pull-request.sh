@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 test -z "$GITHUB_TOKEN" && echo "GITHUB_TOKEN is not set" && exit 1
 test -z "$BASE_BRANCH" && echo "BASE_BRANCH is not set" && exit 1
